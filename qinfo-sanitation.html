@@ -1,8 +1,13 @@
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="./app-leveldb/app-leveldb-doc.html">
+<link rel="import" href="./class-list.html">
+<link rel="import" href="./record-page.html">
+<link rel="import" href="./questionnaire-list.html">
 
 <!--
 `qinfo-sanitation`
-
 
 @demo demo/index.html 
 -->
@@ -14,20 +19,99 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]</h2>
+
+    <paper-dialog id="addRecord">
+      <h2>เพิ่มแบบข้อมูลสุขภาพนักเรียน</h2>
+      <div class="classListWarpper">
+        <class-list year="[[academicYear]]" host-id="[[hostId]]" 
+          student="{{student}}">
+        </class-list>
+      </div>
+    </paper-dialog>
+
+    <app-leveldb-doc 
+      id="saveDoc"
+      location="[[dbLocation]]"
+      api-key="[[apiKey]]"
+      db-name="healthcare"
+      on-response="_onRecordSaved"
+      key="{{record_key}}"
+      data="{{record_value}}">
+    </app-leveldb-doc>
+
+
+    <iron-pages selected="[[selected]]">
+      <record-page id="recordPage" 
+        host-id="[[hostId]]" 
+        api-key="[[apiKey]]"
+        on-add-doc="_addDoc">
+      </record-page>
+      <questionnaire-list document="{{record_value}}" student="{{record_value.student_info}}" 
+        id="questionairelist"
+        on-saved="_documentSaved"
+        on-delete="_deleteDocument"> 
+      </questionnaire-list>
+    </iron-pages>
+
   </template>
 
   <script>
     Polymer({
-
       is: 'qinfo-sanitation',
-
+      listeners:{
+        'class-list-selected':'_handleStudentSelected',
+        'record-selected':'_handleRecordSelected',
+        'back':'_back'
+      },
       properties: {
+        hostId: String,
+        apiKey: String,
+        dbLocation:String,
+        academicYear:String,
         prop1: {
           type: String,
           value: 'qinfo-sanitation',
         },
       },
+      ready:function() {
+        this.set('selected',0);
+      },
+      _handleRecordSelected:function(e) {
+        this.$.questionairelist.reset();
+        this.set('record_key',e.detail.key);
+        this.set('selected',1);
+      },
+      _handleStudentSelected: function(e) {
+        this.$.addRecord.close();
+        if(e.detail.selected) {
+          this.$.questionairelist.reset();
+          var _value = {
+             'student_info':this.student,
+             'ts':(new Date()).getTime()*-1,
+             'staff_info':this.user
+          };
+          this.set('record_value',_value);
+          this.set('selected',1);
+        } else {
+        }
+      },
+      _documentSaved:function() {
+         this.$.saveDoc.save();
+      },
+      _addDoc:function() {
+         this.$.addRecord.open();
+      },
+      _deleteDocument:function(e){
+        this.$.saveDoc.delete();
+        this.set('selected',0);
+      },
+      _onRecordSaved:function() {
+         this.set('selected',0);
+         this.$.recordPage.refresh();
+      },
+      _back:function() {
+         this.set('selected',this.selected-1);
+      }
 
     });
   </script>

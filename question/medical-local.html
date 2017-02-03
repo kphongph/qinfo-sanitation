@@ -1,0 +1,115 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+<dom-module id="medical-local">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+			<div class="description">
+				การเจ็บป่วยส่งต่อ
+			</div>
+			<paper-input label="รายงานการเจ็บป่วย" value="{{data.observer}}"></paper-input>
+			<paper-input label="แนะนำ/รักษา/ส่งต่อ" value="{{data.send}}"></paper-input>
+			<br/>
+			<div class="description">
+				ทันตกรรม
+			</div>
+			<br/>
+			<template is="dom-repeat" items="{{data.dental}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+			<paper-input label="เคลือบหลุมร่องฟัน (จำนวนซี่ฟัน)" value="{{data.toothhole}}"></paper-input>
+			<template is="dom-repeat" items="{{data.iodin}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+			<template is="dom-repeat" items="{{data.anemia}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "medical-local",
+      properties: {
+				data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"observer": "",
+						"send": "",
+						"dental": [
+							{label: "โรคเหงือกอักเสบบนขวา", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคเหงือกอักเสบบนซ้าย", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคเหงือกอักเสบบนหน้า", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคเหงือกอักเสบล่างขวา", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคเหงือกอักเสบล่างซ้าย", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคเหงือกอักเสบล่างหน้า", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'เหงือกอักเสบ', value: '1'}, {text: 'สภาพในช่องปากที่ต้องการการรักษาอย่างเร่งด่วน', value: '2'}]},
+							{label: "โรคฟันถาวรผุ", 
+							answer: "", 
+							choice: [{text: 'ฟันถาวรไม่ผุ', value: '0'}, {text: 'ฟันถาวรผุ', value: '1'}]},
+						],
+						"toothhole": "0",
+						"iodin": [
+							{label: "ภาวะขาดสารไอโอดีน", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]}
+						],
+						"anemia": [
+							{label: "ภาวะโลหิตจาง", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]}
+						]
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>

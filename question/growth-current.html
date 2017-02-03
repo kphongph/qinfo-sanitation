@@ -1,0 +1,50 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+
+<dom-module id="growth-current">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+      <paper-input label="น้ำหนัก" value="{{data.weight}}"></paper-input>
+      <paper-input label="ส่วนสูง" value="{{data.height}}"></paper-input>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "growth-current",
+      properties: {
+        data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"weight" : "",
+						"height" : ""
+					}
+				}
+			}
+    });
+  </script>
+</dom-module>
+

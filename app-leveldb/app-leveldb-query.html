@@ -1,0 +1,63 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
+<link rel="import" href="../../app-storage/app-localstorage/app-localstorage-document.html">
+
+<dom-module id="app-leveldb-query">
+  <template>
+    <style>
+    </style>
+
+    <iron-ajax id="queryAjax"
+      auto
+      method="POST"
+      url$="{{location}}/api/query/{{dbName}}/{{view}}"
+      params$='{"apikey":"{{apiKey}}"}'
+      body="{{query}}"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_handleQuery"
+      debounce-duration="300">
+    </iron-ajax>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "app-leveldb-query",
+      properties: {
+        location: String,
+        dbName: String,
+        view: String,
+        query: {
+          type:Object,
+          notify:true
+        },
+        data: {
+          type: Array,
+          notify: true
+        },
+        apiKey: String
+      },
+      observers: [
+        '_reQueryStart(query.*)'
+      ],
+      ready: function () {
+      },
+      forceQuery:function() {
+        this.$.queryAjax.generateRequest();
+      },
+      _handleQuery: function (e) {
+        var response = e.detail.response;
+        if (!('ok' in response)) {
+          this.set('data', response);
+          this.fire('response',response);
+        }
+      },
+      _reQueryStart:function(query) {
+        console.log(query);
+        this.$.queryAjax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>
+

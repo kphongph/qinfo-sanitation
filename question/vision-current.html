@@ -1,0 +1,88 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+
+<dom-module id="vision-current">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+			<template is="dom-repeat" items="{{data.glasses}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+			<paper-input label="แนะนำการรักษาตา" value="{{data.cure_vision_rec}}"></paper-input>
+			<template is="dom-repeat" items="{{data.hear}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+			<paper-input label="แนะนำการรักษาหู" value="{{data.cure_hear_rec}}"></paper-input>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: "vision-current",
+      properties: {
+				data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"glasses": [
+							{label: "การวัดสายตาโดยใช้แผ่นทดสอบสายตาไม่สวมแว่น (ซ้าย) ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]},
+							{label: "การวัดสายตาโดยใช้แผ่นทดสอบสายตาไม่สวมแว่น (ขวา) ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]},
+							{label: "การวัดสายตาโดยใช้ Pin-Hole สวมแว่น (ซ้าย)", 
+							answer: "", 
+							choice: [{text: 'มองเห็นดีขึ้น', value: '0'}, {text: 'มองเห็นไม่ดีขึ้น', value: '1'}]},
+							{label: "การวัดสายตาโดยใช้ Pin-Hole สวมแว่น (ขวา)", 
+							answer: "", 
+							choice: [{text: 'มองเห็นดีขึ้น', value: '0'}, {text: 'มองเห็นไม่ดีขึ้น', value: '1'}]}
+						],
+						"cure_vision_rec" : "",
+						"hear": [
+							{label: "การตรวจการได้ยิน (ซ้าย) ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]},
+							{label: "การตรวจการได้ยิน (ขวา) ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '0'}, {text: 'ผิดปกติ', value: '1'}]}
+						],
+						"cure_hear_rec": ""
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,83 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+
+<dom-module id="physical-current">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+			<template is="dom-repeat" items="{{data.physical}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "physical-current",
+      properties: {
+				data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"physical": [
+							{label: "เหา แผลหนังศีรษะ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "ตาแดง กุ้งยิง ตาอักเสบ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "หูอื้อ มีน้ำหรือหนองไหล", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "น้ำมูกไหล คัดจมูก ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "แผลมุมปาก แผลในปากหรือลิ้น ", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "ฟันเป็นจุดดำ ฟันผุ ปวดฟัน", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "บวมแดง มีหนอง เลือดออก", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "มีก้อนบริเวณคอ (แหงนหน้ามองกระจกแล้วกลืนน้ำลาย จะมีก้อนใต้ลูกกระเดือก)", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]},
+							{label: "ด่างขาว กลาก เกลื้อน พุพอง เป็นหนอง", 
+							answer: "", 
+							choice: [{text: 'ปกติ', value: '1'}, {text: 'ผิดปกติ', value: '0'}]}
+						]
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>
+

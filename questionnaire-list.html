@@ -1,0 +1,133 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-styles/typography.html">
+<link rel="import" href="../paper-stepper/paper-stepper.html">
+<link rel="import" href="../paper-stepper/paper-step.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="./question/student-info.html">
+<link rel="import" href="./studentprofile-card.html">
+<link rel="import" href="./question/sick-current.html">
+<link rel="import" href="./question/vaccine-history.html">
+<link rel="import" href="./question/growth-current.html">
+<link rel="import" href="./question/vision-current.html">
+<link rel="import" href="./question/eating-current.html">
+<link rel="import" href="./question/physical-current.html">
+<link rel="import" href="./question/medical-current.html">
+<link rel="import" href="./question/medical-local.html">
+
+<dom-module id="questionnaire-list">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      :host {
+         display:block;
+      }
+      paper-fab.blue {
+        --paper-fab-background: var(--paper-light-blue-500);
+        --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+       position: fixed;
+       bottom: 16px;
+       right: 16px;
+       color: white;
+       will-change: transform;
+       transition: transform 0.2s ease-in-out;
+      }
+
+      paper-fab.orange {
+        --paper-fab-background: var(--paper-orange-500);
+        --paper-fab-keyboard-focus-background: var(--paper-orange-900);
+       position: fixed;
+       bottom: 16px;
+       right: 96px;
+       color: white;
+       will-change: transform;
+       transition: transform 0.2s ease-in-out;
+      }
+
+      paper-fab.red {
+        --paper-fab-background: var(--paper-red-500);
+        --paper-fab-keyboard-focus-background: var(--paper-red-900);
+       position: fixed;
+       bottom: 16px;
+       right: 176px;
+       color: white;
+       will-change: transform;
+       transition: transform 0.2s ease-in-out;
+      }
+
+      paper-step {
+       --paper-vertical-step-max-height:2000px;
+      }
+    </style>
+    <studentprofile-card data="{{student}}"></studentprofile-card>
+    <paper-stepper has-back-button vertical
+      id="stepper"
+      completed="{{document.completed}}"
+      saved-step-number="{{document.completed_step}}"
+      on-paper-stepper-completed="_save"
+      on-paper-stepper-progressed="_progress">
+      <paper-step label="ข้อมูลพื้นฐานของนักเรียน" editable>
+        <student-info data="{{document.student_info}}"></student-info>
+      </paper-step>
+      <paper-step label="ผลการตรวจโรคปัจจุบัน" editable saved="{{document._sick_current}}">
+        <sick-current data="{{document.sick_current}}"></sick-current>
+      </paper-step>
+      <paper-step label="ประวัติการสร้างเสริมภูมิคุ้มกันโรคหรือวัคซีน " editable>
+        <vaccine-history data="{{document.vaccine_history}}"></vaccine-history>
+      </paper-step>
+      <paper-step label="การเจริญเติบโต " editable>
+        <growth-current data="{{document.growth_current}}"></growth-current>
+      </paper-step>
+      <paper-step label="การตรวจสายตา /ได้ยิน" editable>
+        <vision-current data="{{document.vision_current}}"></vision-current>
+      </paper-step>
+      <paper-step label="การบริโภคอาหาร " editable>
+        <eating-current data="{{document.eating_current}}"></eating-current>
+      </paper-step>
+      <paper-step label="ความผิดปกติของร่างกาย " editable>
+        <physical-current data="{{document.physical_current}}"></physical-current>
+      </paper-step>
+      <paper-step label="การชันสูตร (ประวัติยาเสพย์ติด) " editable>
+        <medical-current data="{{document.medical_current}}"></medical-current>
+      </paper-step>
+      <paper-step label="กองการแพทย์" editable>
+        <medical-local data="{{document.medical_local}}"></medical-local>
+      </paper-step>
+    </paper-stepper>
+
+		<paper-fab class="blue" icon="save" on-tap="_save"></paper-fab> 
+		<paper-fab class="orange" icon="arrow-back" on-tap="_back"></paper-fab> 
+		<paper-fab class="red" icon="delete" on-tap="_delete"></paper-fab> 
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "questionnaire-list",
+      properties: {
+        document: {
+          type:Object,
+          notify:true
+        },
+        student: {
+          type:Object,
+          notify:true
+        }
+      },
+      _progress:function() {
+      },
+      _save:function() {
+        //this.$.stepper.reset();
+        this.fire('saved',{});
+      },
+      reset:function() {
+        this.$.stepper.reset();
+      },
+      _back:function() {
+        this.fire('back',{});
+      },
+      _delete:function() {
+        this.fire('delete',{});
+      }
+    });
+  </script>
+</dom-module>

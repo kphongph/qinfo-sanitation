@@ -1,0 +1,182 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-time/iron-time.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-fab/paper-fab.html">
+
+<link rel="import" href="./app-leveldb/app-leveldb-query.html">
+
+<link rel="import" href="./document-card.html">
+
+<dom-module id="record-list">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      paper-fab.blue {
+        --paper-fab-background: var(--paper-light-blue-500);
+        --paper-fab-keyboard-focus-background: var(--paper-light-blue-900);
+        position: fixed;
+        bottom: 16px;
+        right: 16px;
+        color: white;
+        will-change: transform;
+        transition: transform 0.2s ease-in-out;
+      }
+      
+      
+      #header {
+        @apply(--paper-font-subheader);
+        background-color:#c8c8c8;
+        padding-top:10px;
+        padding-left:16px;
+        padding-right:16px;
+        padding-bottom:10px;
+        border-bottom:1px solid #e0e0e0;
+      }
+
+    </style>
+
+    <app-leveldb-query
+      id="queryApp"
+      api-key="[[apiKey]]"
+      location="https://maas.nuqlis.com:9000"
+      db-name="healthcare"
+      view="hostid_timestamp_cid_name"
+      query="{{query}}"
+      on-response="_handleResponse">
+    </app-leveldb-query>
+
+    <div class="layout horizontal">
+    <div class="layout vertical flex">
+      <div id="header">
+        <div class="layout horizontal">
+          <div class="flex-1">เลขบัตรประชาชน</div>
+          <div class="flex-2">ชื่อ-นามสกุล</div>
+          <div class="flex-2">
+            วัน/เดือน/ปี ที่บันทึก
+          </div>
+         </div>
+      </div>
+      <template is="dom-repeat" items="{{list}}">
+        <document-card data="{{item}}" on-select="_onSelect">
+          <div class="layout horizontal">
+            <div class="flex-1">{{item.cid}}</div>
+            <div class="flex-2">{{item.name}}</div>
+            <div class="flex-2">
+              <iron-time datetime="{{_toDate(item.ts)}}" format="dd/mm/yyyy HH:MM"></iron-time>
+            </div>
+          </div>
+        </document-card>
+      </template>
+      <div class="layout horizontal">
+        <paper-button raised on-tap="_back" disabled="{{_firstPage}}">Back</paper-button>
+        <paper-button raised on-tap="_next" disabled="{{_lastPage}}">Next</paper-button>
+      </div>
+    </div>
+    </div>
+    <paper-fab class="blue" icon="add" on-tab="_createDoc"></paper-fab>
+  </template>
+  <script>
+    Polymer({
+      is:'record-list',
+      properties:{
+        _queryList : {
+          type:Object
+        },
+        _page:Number,
+        selected: {
+          type:Object,
+          notify:true
+        },
+        query:{
+          type:Object,
+          notify:true
+        },
+        hostId: {
+          type:String,
+          observer:'_onHostIdChanged'
+        },
+        apiKey:String
+      },
+      ready : function() {
+        this._itemPerPage = 11;
+      },
+      _onSelect:function(e) {
+        console.log(e.detail);
+        this.fire('record-selected',e.detail);
+      },
+      _next:function(e) {
+        console.log(this._queryList);
+        if(this._queryList[this._page+1]) {
+          this.set('_lastPage',false);
+          this.set('_firstPage',false);
+          this.query['start'] = this._queryList[this._page+1];
+          this._page++;
+          this.notifyPath('query.start');
+        } else {
+          this.set('_lastPage',true);
+        }
+      },
+      _back:function(e) {
+        if(this._page != 0) {
+          this._page--;
+          this.query['start'] = this._queryList[this._page];
+          this.notifyPath('query.start');
+          if(this._page!=0) {
+            this.set('_firstPage',false);
+          } else {
+            this.set('_lastPage',false);
+            this.set('_firstPage',true);
+          }
+        }
+      },
+      _handleResponse:function(e) {
+         var response = e.detail;
+         var list = e.detail.map(function(obj) {
+           return {
+             key:obj.value,
+             cid:obj.key[3],
+             name:obj.key[4],
+             ts:obj.key[2],
+             _key:obj.key 
+           };
+         });
+          
+         if(list.length == this._itemPerPage) {
+           this.set('_lastPage',false);
+           if(this._page == this._queryList.length-1) {
+             this._queryList.push(list[list.length-1]._key);
+           }
+           this.set('list',list.splice(0,list.length-1));
+         } else {
+           this.set('list',list);
+           this.set('_lastPage',true);
+         }
+      },
+      _toDate:function(value) {
+         return -1*value;
+      },
+      refresh:function() {
+        var tmp = this._queryList[0];
+        this.set('_queryList',[]);
+        this.query['start']=tmp;
+        this.set('_firstPage',true);
+        this.set('_page',0);
+        this.push('_queryList',tmp);
+        this.$.queryApp.forceQuery();
+      },
+      _onHostIdChanged:function(value) {
+        if(value) { 
+          this._queryList = [];
+          this.query={
+            limit:this._itemPerPage,
+            start:[value],
+            end:[value+'\xff']
+          };
+          this._page = 0;
+          this._queryList.push([value]);
+          this.set('_firstPage',true);
+        }
+      }
+    });
+  </script>
+</dom-module>

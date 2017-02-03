@@ -1,0 +1,83 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+
+<dom-module id="eating-current">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+			<template is="dom-repeat" items="{{data.eating}}">
+				<label>{{item.label}} : </label>
+				<paper-radio-group selected="{{item.answer}}">
+					<template is="dom-repeat" items="{{item.choice}}">
+						<paper-radio-button name="{{item.text}}">{{item.text}}</paper-radio-button>
+					</template>
+				</paper-radio-group>
+			</template>
+  </template>
+
+  <script>
+    Polymer({
+      is: "eating-current",
+      properties: {
+				data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"eating": [
+							{label: "กินอาหารเช้า", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "กินอาหารครบ 3 มื้อ", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "กินข้าวกล่อง", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "กินผัก", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "กินผลไม้", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "กินเนื้อสัตว์", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "ดื่มนมรสจืด", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '4'}, {text: 'ประจำ', value: '3'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '1'}, {text: 'ไม่กิน', value: '0'}]},
+							{label: "ดื่มน้ำอัดลม", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '0'}, {text: 'ประจำ', value: '1'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '3'}, {text: 'ไม่กิน', value: '4'}]},
+							{label: "ขนมคบเคี้ยว/ขนมกรุบกรอบ", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '0'}, {text: 'ประจำ', value: '1'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '3'}, {text: 'ไม่กิน', value: '4'}]},
+							{label: "เครื่องดื่ม/ขนมใส่สีสด เช่น น้ำหวาน ลูกอม วุ้น เยลลี่", 
+							answer: "", 
+							choice: [{text: 'ทุกวัน', value: '0'}, {text: 'ประจำ', value: '1'}, {text: 'ครั้งคราว', value: '2'}, {text: 'นานๆครั้ง', value: '3'}, {text: 'ไม่กิน', value: '4'}]},
+						]
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>

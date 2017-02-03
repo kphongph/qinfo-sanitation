@@ -1,0 +1,62 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+
+<dom-module id="vaccine-history">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+      <div class="description">
+					
+      </div>
+      <template is="dom-repeat" items="{{data.list}}">
+        <paper-checkbox checked="{{item.checked}}"> 
+          {{item.label}}
+        </paper-checkbox>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "vaccine-history",
+      properties: {
+        data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data = {
+						"list":[
+							{"label":"บีซีจี","checked":false},
+							{"label":"ตับอักเสบบี","checked":false},
+							{"label":"ไข้สมองอักเสบ","checked":false},
+							{"label":"คอตีบ+ไอกรน+บาดทะยัก","checked":false},
+							{"label":"โปลิโอ","checked":false},
+							{"label":"หัด+หัดเยอรมัน+คางทูม","checked":false}
+						]
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>

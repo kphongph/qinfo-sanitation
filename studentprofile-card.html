@@ -1,0 +1,56 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-card/paper-card.html">
+
+<dom-module id="studentprofile-card">
+  <template>
+    <style>
+      paper-card.rate { @apply(--layout-horizontal); }
+        .rate-image {
+          width: 200px;
+          height: 150px;
+          background-size: cover;
+        }
+        .rate-content {
+          @apply(--layout-flex);
+          float: left;
+        }
+        .rate-header { @apply(--paper-font-headline); }
+        .rate-name { color: var(--paper-grey-600); margin: 10px 0; }
+        paper-icon-button.rate-icon {
+          --iron-icon-fill-color: white;
+          --iron-icon-stroke-color: var(--paper-grey-600);
+      }
+    </style>
+
+    <paper-card class="rate">
+      <!--
+      <div class="rate-image"><img src="{{_changepicavatar(data.pic)}}" height="150px" width="200px"></img></div>
+      -->
+      <div class="rate-content">
+        <div class="card-content">
+          <div class="rate-header">{{data.title}}{{data.name}}</div>
+          <div class="rate-name">เลขประจำตัว : {{data.studentid}}</div>
+          <div>นักเรียนประจำชั้น {{data.room}} เลขที่ {{data.Number}}</div>
+          <!--<div>Live from space</div>-->
+        </div>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is:'studentprofile-card',
+      properties:{
+        data:{
+          type:Object,
+          notify:true
+        }
+      },
+      _changepicavatar:function(value){
+        if(value == ""){
+          return "avatar-boy.png"
+        }
+        return value;
+      }
+    });
+  </script>
+</dom-module>

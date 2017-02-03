@@ -1,0 +1,91 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-ajax/iron-ajax.html">
+
+<dom-module id="app-leveldb-doc">
+  <template>
+    <style>
+    </style>    
+
+    <iron-ajax id="getDocAjax" hidden$="[[key]]"
+      auto  
+      url$="{{location}}/api/dbs/{{dbName}}/{{key}}"
+      params$='{"apikey":"{{apiKey}}","limit":1}'
+      content-type="application/json"
+      handle-as="json"
+      on-response="_handleGetDoc"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="postDocAjax"      
+      method="POST"
+      url$="{{location}}/api/dbs/{{dbName}}/{{key}}"
+      params$='{"apikey":"{{apiKey}}"}'
+      body="{{data}}"
+      content-type="application/json"
+      handle-as="json"
+      on-response="_handlePostDoc"
+      debounce-duration="300">
+    </iron-ajax>
+
+    <iron-ajax id="deleteDocAjax"      
+      method="DELETE"
+      url$="{{location}}/api/dbs/{{dbName}}/{{key}}"
+      params$='{"apikey":"{{apikey.apikey}}"}'
+      handle-as="json"
+      on-response="_handleDeleteDoc"
+      debounce-duration="300">
+    </iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: "app-leveldb-doc",
+      properties: {
+        location: String,
+        dbName: String,
+        apiKey:String,
+        key:  Object,
+        data:{
+          type: Object,
+          reflectToAttribute:true,
+          notify: true
+        },
+        apikey: {
+          type: Object,
+          value: {},
+          notify: true,
+        }
+      },
+      _handleGetDoc: function (e) {
+        var response = e.detail.response;
+        if (response) {
+          if(response.ok == false) {
+            this.set('apikey',{});
+          } else {
+          if(this.key) {
+            this.set('data', response);
+          }
+          }
+        }
+      },
+      save: function() {
+        console.log(this.data);
+        this.$.postDocAjax.generateRequest();
+      },
+      _handlePostDoc: function(e) {
+        this.fire('response',e.detail.response);
+        console.log(e.detail.response);
+      },
+      _handleDeleteDoc: function(e) {
+        console.log(e.detail.response);
+        this.fire('response',e.detail.response);        
+      },
+      delete: function() {
+        console.log(this.$.deleteDocAjax);
+        if(this.key) {
+            this.$.deleteDocAjax.generateRequest();
+          }        
+      }  
+    });
+  </script>
+</dom-module> 

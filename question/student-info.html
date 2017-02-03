@@ -1,0 +1,51 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../paper-input/paper-input.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+<link rel="import" href="../../paper-radio-group/paper-radio-group.html">
+
+<dom-module id="student-info">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        display:block;
+      }
+    </style>
+      <label id="label_bloodgroup_radio" class="description">กรุ๊ปเลือด :  </label>
+      <paper-radio-group selected="{{data.bloodgroup}}" aria-labelledby="label_bloodgroup_radio">
+        <paper-radio-button name="a">A</paper-radio-button>
+        <paper-radio-button name="b">B</paper-radio-button>
+        <paper-radio-button name="ab">AB</paper-radio-button>
+        <paper-radio-button name="o">O</paper-radio-button>
+      </paper-radio-group>
+      <paper-input label="ชนิดการแพ้ของพิษ (ไม่แพ้-ไม่ต้องใส่)" value="{{data.allergy_toxic}}"></paper-input>
+      <paper-input label="ชนิดการแพ้ของยา (ไม่แพ้-ไม่ต้องใส่)" value="{{data.allergy_med}}"></paper-input>
+  </template>
+
+  <script>
+    Polymer({
+      is: "student-info",
+      properties: {
+        data: {
+          type:Object,
+          notify:true,
+          observer:'_onDataChanged',
+          value:function() {
+            return {};
+          }
+        }
+      },
+      _onDataChanged:function(newValue) {  
+        if(newValue == undefined) {
+          this.data = {
+            "bloodgroup" : "",
+            "allergy_toxic" : "",
+            "allergy_med" : ""
+          };
+        }
+      }
+    });
+  </script>
+</dom-module>

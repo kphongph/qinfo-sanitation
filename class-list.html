@@ -1,0 +1,97 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../paper-autocomplete/paper-autocomplete.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<dom-module id="class-list">
+  <template>
+    <style include="iron-flex iron-flex-alignment">
+      paper-spinner {
+        position:fixed;
+        top:50%;
+        left:50%;
+      }
+      #query-panel {
+        padding:8px;
+      }
+    </style>
+
+    <div class="vertical layout">
+      <paper-autocomplete label="ชื่อนักเรียน"
+        min-length="2"
+        remote-source
+        id="studentName">
+      </paper-autocomplete>
+      <div class="horizontal layout">
+        <paper-input label="ระดับชั้น" value="[[record.room]]" readonly>
+        </paper-input>
+        <paper-input label="รหัสนักเรียน" value="[[record.studentid]]" readonly>
+        </paper-input>
+      </div>
+      <div class="layout horizontal">
+        <paper-button raised on-tap="_selected" disabled="{{!_isSelected}}">เพิ่มข้อมูล</paper-button>
+        <paper-button raised on-tap="_cancel">ยกเลิก</paper-button>
+      </div>
+    </div>
+    
+    <iron-ajax id="listStudentAjax" 
+      url="http://newtestnew.azurewebsites.net/ServiceControl/GetEduService.svc/getFindChild"
+      params$='{"year":"{{year}}","hostid":"{{hostId}}","educlass":"0000","room":"0000","text":"{{text}}"}' 
+      loading="{{loading}}"
+      on-response="_handleStudentList">
+    </iron-ajax>
+    <paper-spinner active="{{loading}}"></paper-spinner>
+</template>
+
+<script>
+    Polymer({
+      is: 'class-list',
+      properties: {
+        student: {
+          type:Object,
+          notify:true
+        },
+        hostId: String,
+        year: String
+      },
+      listeners : {
+        'autocomplete-selected':'_onSelected',
+        'autocomplete-change':'_onTextChanged'
+      },
+      ready:function() {
+        this.set('_isSelected',false);
+      },
+      _onTextChanged:function(e) {
+        this.set('text',e.detail.text);
+        this.$.listStudentAjax.generateRequest();
+      },
+      _onSelected:function(e) {
+        this.set('record',e.detail.value);
+        this.set('_isSelected',true);
+      },
+      _selected:function(e) {
+        this.set('student',this.record);
+        this.fire('class-list-selected',{
+          'selected':true,
+          'student':this.record
+        });
+      },
+      _cancel:function(e) {
+        this.fire('class-list-selected',{
+          'selected':false
+        });
+      },
+      _handleStudentList:function(e) {
+         this.set('_isSelected',false);
+         var response = JSON.parse(e.detail.response);
+         this.set('list',response.persondata);
+         var arr = response.persondata.map(function(obj) {
+           return {text:obj.name,value:obj};
+         });
+         this.$.studentName.suggestions(arr);
+      }
+    });
+  </script>
+</dom-module>

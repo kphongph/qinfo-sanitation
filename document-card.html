@@ -1,0 +1,50 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-styles/color.html">
+<link rel="import" href="../paper-styles/typography.html">
+
+<dom-module id="document-card">
+  <template>
+    <style>
+      :host {
+        display:block;
+        max-height:120px;
+      }
+
+      :host([selected]) #content {
+        background-color:#eee;
+      }
+
+      #content {
+        @apply(--paper-font-body1);
+        background-color:#fafafa;
+        padding:16px;
+        border-bottom:1px solid #e0e0e0;
+      }
+
+      #content:hover {
+        background-color:#eee;
+      }
+    </style>
+
+    <div id="container">
+      <div id="content" class="layout horizontal" on-tap="_selected">
+        <content></content>
+      </div>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is:'document-card',
+      properties:{
+        data:{
+          type:Object,
+          notify:true
+        },
+        selected:Boolean
+      },
+      _selected:function(e) {
+        this.fire('select',this.data);
+      }
+    });
+  </script>
+</dom-module>

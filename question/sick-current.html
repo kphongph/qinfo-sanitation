@@ -1,0 +1,75 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../paper-styles/typography.html">
+<link rel="import" href="../../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../../paper-button/paper-button.html">
+
+<dom-module id="sick-current">
+  <template>
+    <style include="iron-flex iron-flex-alignment iron-flex-factors">
+      :host {
+        --paper-checkbox-vertical-align:middle;
+        @apply(--layout-vertical);
+      }
+
+      .description {
+        @apply(--paper-font-subhead);
+      }
+    </style>
+    
+    <div class="vertical layout">
+      <div class="description">
+					เลือกโรคหรืออาการผิดปกติต่อไปนี้ที่ปัจจุบันเป็น
+      </div>
+      <template is="dom-repeat" items="{{data.list}}">
+        <paper-checkbox checked="{{item.checked}}"> 
+          {{item.label}}
+        </paper-checkbox>
+      </template>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: "sick-current",
+      properties: {
+        data: {
+          type:Object,
+          notify:true,
+					observer: '_onDatachanged',
+					value:function() {
+						return {};
+					}
+        }
+      },
+			_onDatachanged: function(value){
+				if(value == undefined){
+					this.data =	{
+						"list":[
+							{"label":"หัด","checked":false},
+							{"label":"อีสุกอีใส","checked":false},
+							{"label":"เลือดกำเดาออกบ่อยๆ","checked":false},
+							{"label":"คางทูม","checked":false},
+							{"label":"คอตีบ","checked":false},
+							{"label":"เป็นหวัดบ่อยๆ","checked":false},
+							{"label":"ไอกรน","checked":false},
+							{"label":"ปอดบวม","checked":false},
+							{"label":"หืด","checked":false},
+							{"label":"วัณโรค","checked":false},
+							{"label":"ไข้เลือดออก","checked":false},
+							{"label":"ลมบ้าหมู","checked":false},
+							{"label":"โลหิตจาง","checked":false},
+							{"label":"พูดไม่ชัด","checked":false},
+							{"label":"พูดติดอ่าง","checked":false},
+							{"label":"กระดูกแขนหรือขา คด งอผิดปกติ","checked":false},
+							{"label":"ปวดศีรษะประจำ","checked":false},
+							{"label":"ปวดประจำเดือน","checked":false},
+							{"label":"โรคไต","checked":false}
+						]
+					};
+				}
+			}
+    });
+  </script>
+</dom-module>
