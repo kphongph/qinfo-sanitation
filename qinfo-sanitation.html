@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`qinfo-sanitation`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="qinfo-sanitation">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]</h2>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'qinfo-sanitation',
+
+      properties: {
+        prop1: {
+          type: String,
+          value: 'qinfo-sanitation',
+        },
+      },
+
+    });
+  </script>
+</dom-module>
